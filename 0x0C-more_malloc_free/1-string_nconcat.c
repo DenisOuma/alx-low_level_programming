@@ -1,98 +1,45 @@
-#include "holberton.h"
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-/**
-* _isNum - check if is a number
-*@num: string to check
-*Return: 1 is numm, 0 not num
-*/
-int _isNum(char *num)
-{
-	int i;
-
-	for (i = 0; num[i] != '\0'; i++)
-	{
-		if (num[i] < '0' || num[i] > '9')
-			return (0);
-	}
-	return (1);
-}
+#include "holberton.h"
 
 /**
-* *_memset - copies a character to the firstn characters of the string pointed
-*@s: original string
-*@b: value to remplace
-*@n: number of bytes
-*Return: s (string modify)
-*/
-char *_memset(char *s, char b, unsigned int n)
+ * *string_nconcat - concatenates n bytes of a string to another string
+ * @s1: string to append to
+ * @s2: string to concatenate from
+ * @n: number of bytes from s2 to concatenate to s1
+ *
+ * Return: pointer to the resulting string
+ */
+char *string_nconcat(char *s1, char *s2, unsigned int n)
 {
-	unsigned int i;
+	char *s;
+	unsigned int i = 0, j = 0, len1 = 0, len2 = 0;
 
-	for (i = 0; i < n; i++)
-		s[i] = b;
-	return (s);
-}
+	while (s1 && s1[len1])
+		len1++;
+	while (s2 && s2[len2])
+		len2++;
 
-/**
-* _strlen - returns the lenght of a string
-*@s: poiter of character
-*Return: the length of a string
-*/
-int _strlen(char *s)
-{
-	int len;
-
-	len = 0;
-	while (*(s + len) != '\0')
-		len++;
-	return (len);
-}
-
-/**
-* main - multiple 2 positive numbers
-*@argc: argument counter
-*@argv: number to multiply
-*Return: 0 (success)
-*/
-int main(int argc, char *argv[])
-{
-	int length, c, prod, i, j, l1, l2;
-	int *res;
-
-	if ((argc != 3 || !(_isNum(argv[1]))) || !(_isNum(argv[2])))
-		puts("Error"), exit(98);
-	l1 = _strlen(argv[1]), l2 = _strlen(argv[2]);
-	length = l1 + l2;
-	res = calloc(length, sizeof(int *));
-	if (res == NULL)
-		puts("Error"), exit(98);
-	for (i = l2 - 1; i > -1; i--)
-	{
-		c = 0;
-		for (j = l1; j > -1; j--)
-		{
-			prod = (argv[2][i] - '0') * (argv[1][j] - '0');
-			c = (prod / 10);
-			res[(i + j) + 1] += (prod % 10);
-			if (res[(i + j) + 1] > 9)
-			{
-				res[i + j] += res[(i + j) + 1] / 10;
-				res[(i + j) + 1] = res[(i + j) + 1] % 10;
-			}
-			res[(i + j) + 1] += c;
-		}
-	}
-
-	if (res[0] == 0)
-		i = 1;
+	if (n < len2)
+		s = malloc(sizeof(char) * (len1 + n + 1));
 	else
-		i = 0;
-	for (; i < length; i++)
-		printf("%d", res[i]);
+		s = malloc(sizeof(char) * (len1 + len2 + 1));
 
-	printf("\n");
-	free(res);
-	return (0);
+	if (!s)
+		return (NULL);
+
+	while (i < len1)
+	{
+		s[i] = s1[i];
+		i++;
+	}
+
+	while (n < len2 && i < (len1 + n))
+		s[i++] = s2[j++];
+
+	while (n >= len2 && i < (len1 + len2))
+		s[i++] = s2[j++];
+
+	s[i] = '\0';
+
+	return (s);
 }
