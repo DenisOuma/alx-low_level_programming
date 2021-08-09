@@ -1,42 +1,42 @@
 #include "holberton.h"
 /**
- * read_textfile - reads a text file and prints
- * it to the POSIX standard output.
- * @filename: file to read
- * @letters: amount of letters to pring
- * Return: 0 if failed. Amount of printed letters
- **/
+* read_textfile - check the code for Holberton School students.
+* @filename: file to read and write
+* @letters: number of letters to read and write.
+* Return: letters printed
+*/
 ssize_t read_textfile(const char *filename, size_t letters)
 {
-	int file_d;
-	ssize_t size_read, size_write;
-	char *buff;
+	ssize_t nletters;
+	int file;
+	char *text;
 
-	if (filename == NULL)
+	if (!filename)
 		return (0);
-
-	file_d  = open(filename, O_RDONLY);
-	if (file_d == -1)
+	text = malloc(sizeof(char) * letters + 1);
+	if (text == NULL)
 		return (0);
-
-	buff = malloc(sizeof(char) * letters);
-	if (buff == NULL)
-		return (0);
-
-	size_read = read(file_d, buff, letters);
-	if (size_read == -1)
+	file = open(filename, O_RDONLY);
+	if (file == -1)
 	{
-		free(buff);
+		free(text);
 		return (0);
 	}
-
-	size_write = write(STDOUT_FILENO, buff, size_read);
-	if (size_write == -1)
+	nletters = read(file, text, sizeof(char) * letters);
+	if (nletters == -1)
 	{
-		free(buff);
+		free(text);
+		close(file);
 		return (0);
 	}
-	close(file_d);
-	free(buff);
-	return (size_write);
+	nletters = write(STDOUT_FILENO, text, nletters);
+	if (nletters == -1)
+	{
+		free(text);
+		close(file);
+		return (0);
+	}
+	free(text);
+	close(file);
+	return (nletters);
 }

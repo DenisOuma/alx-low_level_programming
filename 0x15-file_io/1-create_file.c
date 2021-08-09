@@ -1,35 +1,46 @@
 #include "holberton.h"
 /**
- * create_file - creates a file
- * @filename: name of the file
- * @text_content: content of the file
- * Return: 1 on success, -1 on failure
- */
+  * _strlen - length of a string
+  * @s: input char
+  * Return: length of a string
+**/
+int _strlen(char *s)
+{
+	int i = 0;
+
+	while (s[i])
+	{
+		i++;
+	}
+	return (i);
+}
+/**
+* create_file - check the code for Holberton School students.
+* @filename: file to create.
+* @text_content: info to write into the file.
+* Return: 1 on success, -1 on failure
+*/
 int create_file(const char *filename, char *text_content)
 {
-	ssize_t size_write;
-	int file_d, len;
+	ssize_t nletters;
+	int file;
 
-	if (filename == NULL)
-		return (-1);
-	file_d = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 0600);
-	if (file_d == -1)
-		return (-1);
-
-	if (text_content == NULL)
-	{
-		close(file_d);
+	if (!filename)
 		return (1);
-	}
-	for (len = 0; text_content[len] != '\0'; len++)
-		;
-
-	size_write = write(file_d, text_content, len);
-	if (size_write ==  -1)
+	file = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+	if (file == -1)
 	{
-		write(STDOUT_FILENO, "fails", 5);
 		return (-1);
 	}
-	close(file_d);
+	if (text_content)
+	{
+		nletters = write(file, text_content, _strlen(text_content));
+		if (nletters == -1)
+		{
+			close(file);
+			return (-1);
+		}
+	}
+	close(file);
 	return (1);
 }
